@@ -5,8 +5,12 @@ const {v4: uuidv4 } = require('uuid');
 const path = require("path");
 const { notStrictEqual } = require("assert"); 
 const res = require("express/lib/response");
+const util = require('util');
 
-const DIR_DATABASE = path.resolve(__dirname, "../db")
+const DIR_DATABASE = path.resolve(__dirname, "../db/")
+
+const readFileAsync = util.promisify(fs.readFile);
+const fswriteFileSync = util.promisify(fs.writeFile);
 
 router.get("/notes",(req,res)=>{
     const notes = readFile(); 
@@ -18,8 +22,9 @@ router.post("/notes",(req,res)=>{
     newTask.id = uuidv4(); 
     const notes = readFile();
     notes.push(newTask)
-    fswriteFileSync(path.join(DIR_DATABASE, "notes.json"),JSON.stringify(notes))
-    res.json({message:"data received"})
+    console.log("notes", notes);
+    fswriteFileSync(path.join(DIR_DATABASE, "db.json"),JSON.stringify(notes))
+    res.json(newTask);
 
 })
 
@@ -28,13 +33,13 @@ router.delete("/notes/:id", (req,res)=> {
     const deleteNote = req.params.id;
     let notes = readFile();
     notes = notes.filter(note => note.id != deleteNote)
-    fs.writeFileSync(path.join(DIR_DATABASE, "notes.json"),JSON.stringify(notes))
+    fs.writeFileSync(path.join(DIR_DATABASE, "db.json"),JSON.stringify(notes))
     res.json({message:"data deleted"})
 }) 
 
 const readFile = () => {
     try {
-        return JSON.parse(fs.readFileSync(path.join(DIR_DATABASE, "notes.json"), "utf8"));
+        return JSON.parse(fs.readFileSync(path.join(DIR_DATABASE, "db.json"), "utf8"));
     } catch (err) {
         console.error(err);
     }
