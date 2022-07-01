@@ -13,8 +13,11 @@ app.use(express.static('public'));
 
 
 // GET Route for feedback page
-require('./routes/noteRoutes')(app);
-require('./routes/htmlRoutes')(app);
+const noteRoutes = require('./routes/noteRoutes');
+const htmlRoutes = require('./routes/htmlRoutes');
+
+app.use("/api", noteRoutes);
+app.use("/", htmlRoutes);
 
 app.listen(PORT, function() {
     console.log(`App listening on PORT: ${PORT}`);
