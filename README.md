@@ -1,5 +1,5 @@
 # Note_Taker
-![Thumbnail](assets/homework.png)
+![Thumbnail](./Assets/homework.png)
 
 ## Table of Contents
 
